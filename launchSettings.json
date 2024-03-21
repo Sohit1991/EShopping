@@ -8,7 +8,8 @@
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
         "catalog.api": "StartDebugging",
-        "catalogdb": "StartWithoutDebugging"
+        "catalogdb": "StartWithoutDebugging",
+        "discount.api": "StartDebugging"
       }
     }
   }

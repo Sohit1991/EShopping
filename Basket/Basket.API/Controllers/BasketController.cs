@@ -1,4 +1,5 @@
 ﻿using Basket.Application.Commands;
+using Basket.Application.GrpcService;
 using Basket.Application.Queries;
 using Basket.Application.Responses;
 using MediatR;
@@ -32,6 +33,8 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(ShoppingCartResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ShoppingCartResponse>> UpdateBasket([FromBody] CreateShoppingCartCommand shoppingCartCommand)
         {
+            
+            
             var basket = await _mediator.Send(shoppingCartCommand);
 
             return Ok(basket);
