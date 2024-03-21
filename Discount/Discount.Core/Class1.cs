@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application
+﻿namespace Discount.Core
 {
     public class Class1
     {
