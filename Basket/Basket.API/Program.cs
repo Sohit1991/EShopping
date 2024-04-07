@@ -7,6 +7,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Basket.Infrastructure.Repositories;
 using Basket.Application.GrpcService;
 using Discount.Grpc.Protos;
+using MassTransit;
+using MassTransit.AspNetCoreIntegration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,13 +30,24 @@ builder.Services.AddScoped<DiscountGrpcService>();
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>
     (o => o.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]));
 
-builder.Services.AddSwaggerGen(c=>
+
+builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Basket.API", Version = "v1" });
 });
 
 builder.Services.AddHealthChecks()
     .AddRedis(builder.Configuration["CacheSettings:ConnectionString"], "Redis Health", HealthStatus.Degraded);
+
+builder.Services.AddMassTransit(config =>
+{
+    config.UsingRabbitMq((ct, cfg) =>
+    {        
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+    });
+});
+// it's obslete
+//builder.Services.AddMassTransitHostedService(); 
 
 var app = builder.Build();
 
@@ -43,7 +56,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c=>
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API v1");
     });

@@ -25,9 +25,25 @@ services:
     restart: always
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  orderdb:
+    container_name: orderdb
+    environment:
+      SA_PASSWORD: Sohit1234567
+      ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+      - "1433:1433"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   catalog.api:
     container_name: catalog.api
@@ -49,8 +65,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings__ConnectionString=basketdb:6379"
       - "GrpcSettings__DiscountUrl=http://discount.api"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
+
     depends_on:
       - basketdb
+      - rabbitmq
     ports:
       - "9001:8080"
 
@@ -65,6 +84,17 @@ services:
     ports:
       - "9002:8080"
 
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings__OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Sohit1234567;TrustServerCertificate=true"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - orderdb
+      - rabbitmq
+    ports:
+      - "9003:8080"
 
 
 
@@ -88,5 +118,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+
+
+
 
 
