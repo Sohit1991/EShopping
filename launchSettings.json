@@ -9,7 +9,9 @@
       "serviceActions": {
         "catalog.api": "StartDebugging",
         "catalogdb": "StartWithoutDebugging",
-        "discount.api": "StartDebugging"
+        "discount.api": "StartDebugging",
+        "ordering.api": "StartDebugging",
+        "ocelot.apigateway": "StartDebugging"
       }
     }
   }

@@ -5,10 +5,11 @@ USER app
 WORKDIR /app
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build 
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Basket/Basket.API/Basket.API.csproj", "Basket/Basket.API/"]
+COPY ["Infrastructure/EventBus.Messages/EventBus.Messages.csproj", "Infrastructure/EventBus.Messages/"]
 COPY ["Basket/Basket.Application/Basket.Application.csproj", "Basket/Basket.Application/"]
 COPY ["Basket/Basket.Core/Basket.Core.csproj", "Basket/Basket.Core/"]
 COPY ["Basket/Basket.Infrastructure/Basket.Infrastructure.csproj", "Basket/Basket.Infrastructure/"]

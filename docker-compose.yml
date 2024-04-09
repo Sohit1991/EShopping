@@ -19,6 +19,18 @@ services:
       context: .
       dockerfile: Discount/Discount.API/Dockerfile
 
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Ordering/Ordering.API/Dockerfile
+
+  ocelot.apigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/Ocelot.ApiGateway/Dockerfile
+
   catalogdb:
     image: mongo
 
@@ -34,6 +46,14 @@ services:
   portainer:
     image: portainer/portainer-ce
 
+  orderdb:
+    image : mcr.microsoft.com/mssql/server:2017-latest
+ 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+
+
 
 
 
@@ -42,4 +62,6 @@ volumes:
   portainer_data:
   postgres_data:
   pgadmin_data:
+
+
 
