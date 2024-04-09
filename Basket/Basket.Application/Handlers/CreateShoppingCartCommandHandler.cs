@@ -26,11 +26,11 @@ namespace Basket.Application.Handlers
         {
             // TO DO Call discount service and apply coupons
 
-            foreach (var item in request.Items)
-            {
-                var coupon = await _discountGrpcService.GetDiscount(item.ProductName);
-                item.Price -= coupon.Amount;
-            }
+            //foreach (var item in request.Items)
+            //{
+            //    var coupon = await _discountGrpcService.GetDiscount(item.ProductName);
+            //    item.Price -= coupon.Amount;
+            //}
             var shoppingCart = await _basketRepository.UpdateBasket(new Core.Entities.ShoppingCart
             {
                 UserName = request.UserName,
