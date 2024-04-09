@@ -96,7 +96,7 @@ services:
     ports:
       - "9003:8080"
 
-  ocelotapigw:
+  ocelot.apigateway:
     container_name: ocelotapigw
     environment:
       - ASPNETCORE_ENVIRONMENT=Development      
@@ -130,15 +130,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
 
-
-
-
-
-
-  ocelot.apigateway:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-    ports:
-      - "8080"
 
