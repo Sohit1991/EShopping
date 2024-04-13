@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var authScheme = "EShoppingGatewayAuthScheme";
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(authScheme, options =>
+    {
+        options.Authority = "https://localhost:9009";
+        options.Audience = "EShoppingGateway";
+    });
 
 builder.Services.AddOcelot()
                 .AddCacheManager(o => o.WithDictionaryHandle());
