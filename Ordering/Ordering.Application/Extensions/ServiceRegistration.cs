@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Common.Logging.Correlation;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Ordering.Application.Behaviour;
@@ -20,6 +21,7 @@ namespace Ordering.Application.Extensions
             //services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(ServiceRegistration).Assembly));
             services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(ServiceRegistration).Assembly));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            //services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(UnHandledExcepionBehaviour<,>));
 

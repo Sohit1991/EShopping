@@ -2,6 +2,7 @@
 using Catalog.Application.Queries;
 using Catalog.Application.Responses;
 using Catalog.Core.Specs;
+using Common.Logging.Correlation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,24 +10,29 @@ using System.Net;
 
 namespace Catalog.API.Controllers
 {
-    
+
     public class CatalogController : ApiController
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<CatalogController> _logger;
+        private readonly ICorrelationIdGenerator _correlationIdGenerator;
 
-        public CatalogController(IMediator mediator)
+        public CatalogController(IMediator mediator, ILogger<CatalogController> logger, ICorrelationIdGenerator correlationIdGenerator)
         {
             this._mediator = mediator;
+            this._logger = logger;
+            this._correlationIdGenerator = correlationIdGenerator;
+            _logger.LogInformation("CorrelationId {CorrelationId}", _correlationIdGenerator.Get());
         }
-       
+
 
         [HttpGet]
-        [Route("[action]/{id}",Name ="GetProductById")]
-        [ProducesResponseType(typeof(ProductResponse),(int)HttpStatusCode.OK)]
+        [Route("[action]/{id}", Name = "GetProductById")]
+        [ProducesResponseType(typeof(ProductResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ProductResponse>> GetProductById(string id)
         {
             var query = new GetProductByIdQuery(id);
-            var product=await _mediator.Send(query);
+            var product = await _mediator.Send(query);
             return Ok(product);
         }
 
@@ -47,6 +53,7 @@ namespace Catalog.API.Controllers
         {
             var query = new GetAllProductQuery(catalogSpecParams);
             var product = await _mediator.Send(query);
+            _logger.LogInformation("Successfully all products retriedved ");
             return Ok(product);
         }
 
@@ -85,7 +92,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(ProductResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ProductResponse>> CreateProduct([FromBody] CreateProductCommand product)
         {
-           
+
             var result = await _mediator.Send(product);
             return Ok(result);
         }

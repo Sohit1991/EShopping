@@ -9,16 +9,16 @@ namespace EventBus.Messages.Events
     public class BaseIntegrationEvent
     {
         //Co- relation id
-        public Guid Id { get; private set; }
+        public string CorrelationId { get;  set; }
         public DateTime CreationDate { get;private set; }
         public BaseIntegrationEvent()
         {
-            Id = Guid.NewGuid();
+            CorrelationId = Guid.NewGuid().ToString();
             CreationDate = DateTime.Now;
         }
-        public BaseIntegrationEvent(Guid id, DateTime creationDate)
+        public BaseIntegrationEvent(Guid correlationId, DateTime creationDate)
         {
-            Id = id;
+            CorrelationId = correlationId.ToString();
             CreationDate = creationDate;
         }
     }
