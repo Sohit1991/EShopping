@@ -1,3 +1,5 @@
+using Common.Logging;
+using Common.Logging.Correlation;
 using EventBus.Messages.Common;
 using HealthChecks.UI.Client;
 using MassTransit;
@@ -6,6 +8,7 @@ using Ordering.API.Extensions;
 using Ordering.Application.Extensions;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,7 @@ builder.Services.AddApiVersioning();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicatonService();
+builder.Services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
 builder.Services.AddInfraServices(builder.Configuration);
 builder.Services.AddScoped<BasketOrderingConsumer>();
 builder.Services.AddSwaggerGen(c =>
@@ -40,8 +44,9 @@ builder.Services.AddMassTransit(config =>
         });
     });
 });
-
+builder.Host.UseSerilog(Logging.configureLogger);
 var app = builder.Build();
+
 app.MigrateDatabase<OrderContext>((context, services) =>
 {
     var logger = services.GetService<ILogger<OrderContextSeed>>();

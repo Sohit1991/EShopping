@@ -13,7 +13,7 @@ namespace Ordering.API.EventBusConsumer
         private readonly IMapper _mapper;
         private readonly ILogger<BasketOrderingConsumer> _logger;
 
-        public BasketOrderingConsumer(IMediator  mediator,IMapper mapper,ILogger<BasketOrderingConsumer> logger)
+        public BasketOrderingConsumer(IMediator mediator, IMapper mapper, ILogger<BasketOrderingConsumer> logger)
         {
             this._mediator = mediator;
             this._mapper = mapper;
@@ -21,8 +21,10 @@ namespace Ordering.API.EventBusConsumer
         }
         public async Task Consume(ConsumeContext<BasketCheckOutEvent> context)
         {
+            using var scope = _logger.BeginScope("Consumer Basket Checkout Event for {correlationId}",
+                    context.Message.CorrelationId);
             var command = _mapper.Map<CheckOutOrderCommand>(context.Message);
-            var result=await _mediator.Send(command);
+            var result = await _mediator.Send(command);
             _logger.LogInformation($"Basket checkout event completed");
         }
     }

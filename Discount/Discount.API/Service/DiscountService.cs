@@ -1,4 +1,5 @@
-﻿using Discount.Application.Command;
+﻿using Common.Logging.Correlation;
+using Discount.Application.Command;
 using Discount.Application.Queries;
 using Discount.Grpc.Protos;
 using Grpc.Core;
@@ -10,11 +11,14 @@ namespace Discount.API.Service
     {
         private readonly IMediator _mediator;
         private readonly ILogger<DiscountService> _logger;
+        private readonly ICorrelationIdGenerator _correlationIdGenerator;
 
-        public DiscountService(IMediator mediator, ILogger<DiscountService> logger)
+        public DiscountService(IMediator mediator, ILogger<DiscountService> logger, ICorrelationIdGenerator correlationIdGenerator)
         {
             this._mediator = mediator;
             this._logger = logger;
+            this._correlationIdGenerator = correlationIdGenerator;
+            _logger.LogInformation("CorrelationId {CorrelationId}", _correlationIdGenerator.Get());
         }
         public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
         {

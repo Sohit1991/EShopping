@@ -4,6 +4,9 @@ using Discount.Application.Mapper;
 using Discount.Core.Repositories;
 using Discount.Infrastructure.Repositories;
 using Discount.Infrastructure.Extensions;
+using Common.Logging;
+using Serilog;
+using Common.Logging.Correlation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +18,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationDepedency();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
 builder.Services.AddAutoMapper(typeof(DiscountProfile));
 builder.Services.AddGrpc();
+builder.Host.UseSerilog(Logging.configureLogger);
 
 var app = builder.Build();
+
 app.MigrateDatabase<Program>();
 
 // Configure the HTTP request pipeline.

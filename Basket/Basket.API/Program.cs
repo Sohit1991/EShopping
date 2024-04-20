@@ -9,6 +9,9 @@ using Basket.Application.GrpcService;
 using Discount.Grpc.Protos;
 using MassTransit;
 using MassTransit.AspNetCoreIntegration;
+using Common.Logging;
+using Serilog;
+using Common.Logging.Correlation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddApplicationDepedency();
 builder.Services.AddAutoMapper(typeof(BasketMapper));
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
 builder.Services.AddScoped<DiscountGrpcService>();
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>
     (o => o.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]));
@@ -48,6 +52,7 @@ builder.Services.AddMassTransit(config =>
 });
 // it's obslete
 //builder.Services.AddMassTransitHostedService(); 
+builder.Host.UseSerilog(Logging.configureLogger);
 
 var app = builder.Build();
 

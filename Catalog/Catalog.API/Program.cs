@@ -1,4 +1,7 @@
 
+using Common.Logging;
+using Serilog;
+
 namespace Catalog.API;
 
 public class Program
@@ -11,7 +14,7 @@ public class Program
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>();
-        });
+        }).UseSerilog(Logging.configureLogger);
     
 }
 

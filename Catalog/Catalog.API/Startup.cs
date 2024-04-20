@@ -3,6 +3,7 @@ using Catalog.Application.Handlers;
 using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data;
 using Catalog.Infrastructure.Repositories;
+using Common.Logging.Correlation;
 using HealthChecks.UI.Client;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -34,6 +35,7 @@ namespace Catalog.API
             //services.AddMediatR(typeof(CreateProductCommandHandler).GetTypeInfo().Assembly);
             //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddScoped<ICatalogContext, CatalogContext>();
+            services.AddScoped<ICorrelationIdGenerator, CorrelationIdGenerator>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IBrandRepository, ProductRepository>();
             services.AddScoped<ITypeRepository, ProductRepository>();
