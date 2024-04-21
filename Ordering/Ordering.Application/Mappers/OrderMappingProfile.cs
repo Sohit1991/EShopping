@@ -20,6 +20,7 @@ namespace Ordering.Application.Mappers
             CreateMap<Order, UpdateOrderCommand>().ReverseMap();
             CreateMap<CheckOutOrderCommand, BasketCheckOutEvent>().ReverseMap();
             //CreateMap<Order, DeleteOrderCommand>().ReverseMap();
+            CreateMap<CheckOutOrderCommand, BasketCheckOutEventV2>().ReverseMap();
         }
     }
 }

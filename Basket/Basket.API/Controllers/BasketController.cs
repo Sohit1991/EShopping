@@ -1,4 +1,5 @@
-﻿using Basket.Application.Commands;
+﻿using Asp.Versioning;
+using Basket.Application.Commands;
 using Basket.Application.Mappers;
 using Basket.Application.Queries;
 using Basket.Application.Responses;
@@ -95,5 +96,6 @@ namespace Basket.API.Controllers
             await _mediator.Send(deleteQuery);
             return Accepted();
         }
+       
     }
 }
